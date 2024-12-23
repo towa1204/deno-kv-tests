@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "./app.ts";
 import { setTestData } from "./kv_test_helper.ts";
 import { assertEquals } from "@std/assert";
+import { testClient } from "hono/testing";
 
 describe("app get /", () => {
   let kv: Deno.Kv;
@@ -17,12 +18,12 @@ describe("app get /", () => {
 
   it("レスポンスボディが一致", async () => {
     const app = createApp(kv);
-    const res = await app.request("/");
+    const res = await testClient(app).index.$get();
 
     assertEquals(res.status, 200);
 
     const json = await res.json();
     console.log(json);
-    assertEquals(json.value.username, "taro");
+    assertEquals(json?.username, "taro");
   });
 });

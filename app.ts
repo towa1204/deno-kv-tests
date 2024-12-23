@@ -6,18 +6,21 @@ type Env = {
   };
 };
 
+type User = {
+  "username": string;
+  "age": number;
+  "like": Array<string>;
+};
+
 export function createApp(kv: Deno.Kv) {
-  const app = new Hono<Env>();
-
-  app.use(async (c, next) => {
-    c.set("kv", kv);
-    await next();
-  });
-
-  app.get("/", async (c) => {
-    const result = await kv.get(["user"]);
-    return c.json(result);
-  });
-
+  const app = new Hono<Env>()
+    .use(async (c, next) => {
+      c.set("kv", kv);
+      await next();
+    })
+    .get("/", async (c) => {
+      const result = await kv.get<User>(["user"]);
+      return c.json(result.value);
+    });
   return app;
 }
