@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "./app.ts";
-import { setTestData } from "./kv_test_helper.ts";
+import { setTestDataFromFile } from "./kv_test_helper.ts";
 import { assertEquals } from "@std/assert";
 import { testClient } from "hono/testing";
 
@@ -9,7 +9,7 @@ describe("app get /", () => {
 
   beforeEach(async () => {
     kv = await Deno.openKv(":memory:");
-    await setTestData(kv, ["user"], "user.json");
+    await setTestDataFromFile(kv, ["user"], "user.json");
   });
 
   afterEach(() => {
